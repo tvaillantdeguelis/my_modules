@@ -37,8 +37,8 @@ from my_modules.geotools import geo_distance
 
 class CALIOPFigureMaker():
     def __init__(self):
-        # self.fig_w = cm2in(17.7) # cm
-        # self.fig_h = cm2in(6) # cm
+        self.fig_w = cm2in(17.7) # cm
+        self.fig_h = cm2in(6) # cm
         self.adj_left = 0.09
         self.adj_bottom = 0.18
         self.adj_right = 0.84
