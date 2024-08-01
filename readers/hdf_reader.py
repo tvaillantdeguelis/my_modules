@@ -1,10 +1,11 @@
+import sys
+
 from pyhdf.HDF import HDF
 from pyhdf.SD import SD
 import pyhdf.V
 from pyhdf.error import HDF4Error
-import sys
 
-from standard_outputs import print_time
+from my_modules.standard_outputs import print_time
 
 
 class HDF4Reader:

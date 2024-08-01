@@ -1,5 +1,7 @@
-import netCDF4
 import os
+
+import netCDF4
+
 
 class NetCDFReader:
     """

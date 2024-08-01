@@ -1,9 +1,10 @@
-import numpy as np
 import sys
+
+import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
-from calipso_constants import *
+from my_modules.calipso_constants import *
 
 
 def compute_par_ab532(tot_ab532, per_ab532):

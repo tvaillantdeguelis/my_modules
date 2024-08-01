@@ -1,6 +1,6 @@
 import numpy as np
 
-from constants import *
+from my_modules.constants import *
 
 
 def rh2waterppmv(rh, temp, press_level):
