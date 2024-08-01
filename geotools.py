@@ -6,6 +6,7 @@ import numpy as np
 from scipy import interpolate
 from numba import jit
 
+
 def geo_distance(lat1, lon1, lat2, lon2):
     """
     Compute geometrical distance between to coordinates using spherical model (accurate to
@@ -168,6 +169,7 @@ def neighbors(shape, p):
 
     return v
         
+
 def get_monotical_lon(lon):
     """Transform lon -180/180 to lon -360/360 (to avoid bump in map when crossing)"""
     
@@ -221,6 +223,7 @@ def get_monotical_lon(lon):
             mono_lon[:i_first_cross+1] = mono_lon[:i_first_cross+1] - 360
         
     return mono_lon
+        
         
 if __name__ == '__main__':
     if False:

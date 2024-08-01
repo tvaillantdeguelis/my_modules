@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 # coding: utf8
 
-import numpy as np
 from sys import exit
+
+import numpy as np
+
 
 def savevar(filename, **kwargs):
 
 	np.save(filename, kwargs)
 
 	return
+
 
 def loadvar(filename, *args):
 

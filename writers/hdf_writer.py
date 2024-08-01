@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # coding: utf8
 
-import numpy as np
 import os
+
+import numpy as np
 from pyhdf.SD import SD, SDC
 
 NP_TO_HDF4_DTYPE = {np.dtype(np.character): SDC.CHAR,
