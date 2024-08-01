@@ -5,6 +5,7 @@ from datetime import datetime
 
 import numpy as np
 
+
 def print_time(tic=None): 
     """Print current time. Optionally print elapsed time from a given start time.
     If tic=None: print current time and return current time

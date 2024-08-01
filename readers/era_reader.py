@@ -1,11 +1,12 @@
+import sys
 import os
 
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
 
-from readers.netcdf_reader import NetCDFReader
-from geotools import change_map_grid_resolution
+from my_modules.readers.netcdf_reader import NetCDFReader
+from my_modules.geotools import change_map_grid_resolution
+
 
 class ERAReader(NetCDFReader):
     def __init__(self, filepath, lat=None, lon=None):

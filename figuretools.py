@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # coding: utf8
 
+import sys
 import os
 
 import seaborn as sns
 import matplotlib as mpl
 import numpy as np
 import matplotlib.pyplot as plt 
-import sys
 from matplotlib.colors import from_levels_and_colors
 from matplotlib.ticker import MultipleLocator
 from cycler import cycler
 
-from geotools import geo_distance
+from my_modules.geotools import geo_distance
+
 
 # def setlatexfont():
 

@@ -2,8 +2,9 @@
 This file contains constants that are defined in the CALIPSO products.
 """
 
-import numpy as np
 import os
+
+import numpy as np
 import pickle
 
 WAVELENGTH_532 = 532
