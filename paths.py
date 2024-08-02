@@ -48,8 +48,6 @@ def get_caliop_data_tail_path(product, version, data_type, granule_date):
     :return: tail path where the data product file is stored
     """
 
-    from my_modules.readers.calipso_reader import split_granule_date
-    
     granule_date_dict = split_granule_date(granule_date)
     if hostname[:5] == 'icare':
         caliop_data_tail_path = CALIOP_DATA_TAIL_PATH_FMT[product].format(
