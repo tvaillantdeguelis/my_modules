@@ -802,24 +802,6 @@ def get_single_shot_index_from_5km_index(i_5km):
     return ss_min, ss_max
 
 
-def split_granule_date(granule_date):
-    
-    granule_date_dict = {}
-    granule_date_dict['year'] = int(granule_date[:4])
-    granule_date_dict['month'] = int(granule_date[5:7])
-    granule_date_dict['day'] = int(granule_date[8:10])
-    granule_date_dict['hour'] = int(granule_date[11:13])
-    granule_date_dict['min'] = int(granule_date[14:16])
-    granule_date_dict['sec'] = int(granule_date[17:19])
-    daynight_flag = granule_date[19:21]
-    if daynight_flag == 'ZD':
-        granule_date_dict['daynigth'] = 'day'
-    elif daynight_flag == 'ZN':
-        granule_date_dict['daynigth'] = 'night'
-    
-    return granule_date_dict
-
-
 def duplicate_5km_to_333m(data_5km):
     return np.ma.repeat(data_5km, 15, axis=0)
 
