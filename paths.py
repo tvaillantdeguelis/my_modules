@@ -1,5 +1,7 @@
 import os
 
+from my_modules.readers.calipso_reader import split_granule_date
+
 # Get machine name
 hostname = os.popen('hostname').read().strip()
 
@@ -46,8 +48,6 @@ def get_caliop_data_tail_path(product, version, data_type, granule_date):
     :param granule_date: 'YYYY-MM-DDThh-mm-ssZx'
     :return: tail path where the data product file is stored
     """
-
-    from readers.calipso_reader import split_granule_date
 
     granule_date_dict = split_granule_date(granule_date)
     if hostname[:5] == 'icare':
