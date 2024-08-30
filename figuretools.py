@@ -84,6 +84,9 @@ class CALIOPFigureMaker():
             self.altbins = compute_bounds(alt, alt[1]-alt[0])
 
     def plot_params(self, ax, ymin=None, ymax=None, flag_invert_xaxis=False, flag_lat_lon_label=True, flag_dist=True, flag_dist_label=True):
+        # subtitle
+        ax.text(-0.1, 1.11, self.granule_date, ha='left', va='center', fontsize=6, weight='bold', transform=ax.transAxes)
+
         # y-axis
         ax.yaxis.set_major_locator(MultipleLocator(self.y_major_locator))
         ax.yaxis.set_minor_locator(MultipleLocator(self.y_minor_locator))
