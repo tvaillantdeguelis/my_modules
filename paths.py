@@ -34,7 +34,25 @@ elif hostname[:4] == 'argo':
     CALIOP_DATA_TAIL_PATH_FMT['L1'] = "LID_L1.-{data_type}-{version}/{year:d}/{month:02d}/"
 else:
     raise Exception(f"Error: Data paths for {hostname} hostname not defined.\n")
+
+
+def split_granule_date(granule_date):
     
+    granule_date_dict = {}
+    granule_date_dict['year'] = int(granule_date[:4])
+    granule_date_dict['month'] = int(granule_date[5:7])
+    granule_date_dict['day'] = int(granule_date[8:10])
+    granule_date_dict['hour'] = int(granule_date[11:13])
+    granule_date_dict['min'] = int(granule_date[14:16])
+    granule_date_dict['sec'] = int(granule_date[17:19])
+    daynight_flag = granule_date[19:21]
+    if daynight_flag == 'ZD':
+        granule_date_dict['daynigth'] = 'day'
+    elif daynight_flag == 'ZN':
+        granule_date_dict['daynigth'] = 'night'
+    
+    return granule_date_dict
+
 
 def get_caliop_data_tail_path(product, version, data_type, granule_date):
     """
@@ -46,8 +64,6 @@ def get_caliop_data_tail_path(product, version, data_type, granule_date):
     :param granule_date: 'YYYY-MM-DDThh-mm-ssZx'
     :return: tail path where the data product file is stored
     """
-
-    from readers.calipso_reader import split_granule_date
 
     granule_date_dict = split_granule_date(granule_date)
     if hostname[:5] == 'icare':
