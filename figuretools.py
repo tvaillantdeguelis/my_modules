@@ -46,9 +46,9 @@ class CALIOPFigureMaker():
         self.y_major_locator = 5
         self.y_minor_locator = 1
         self.edges_removal = None
-        self.axes_labelsize = 6
-        self.xtick_labelsize = 6
-        self.ytick_labelsize = 6
+        self.axes_labelsize = 8
+        self.xtick_labelsize = 8
+        self.ytick_labelsize = 8
     
     def set_and_create_fig_folder(self, figures_path, granule_date, lon_min, lon_max):
         self.fig_folder = os.path.join(figures_path, f"{granule_date}_lon_{lon_min:.2f}_{lon_max:.2f}")
@@ -823,7 +823,7 @@ def lat_lon_dist_xaxis(ax, lat, lon, pindex, pindexbins, flag_lat_lon_label=True
     plt.xticks([pindex[x] for x in x_ticks],
                ['%s\n%s' % (lat_ticks[i], lon_ticks[i]) for i in range(len(lat_ticks))])
     plt.xlim(pindexbins[0], pindexbins[-1])
-    plt.minorticks_off()
+    plt.tick_params(axis='x', which='minor', bottom=False)
     # if flag_lat_lon_label:
     #     ax.text(1.1, -0.085, 'Latitude\nLongitude', ha='left', va='top',
     #             transform=ax.transAxes)
