@@ -330,6 +330,167 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
         if cmapname[-2:] == "_r":
             palette = palette[::-1]
     
+    elif cmapname ==  "caliop" # 33 colors (over 1e-1 removed, added with '_both')
+        palette = np.array([[  1/255.,   1/255.,   1/255.],
+                            [  0/255.,  42/255., 170/255.],
+                            [  0/255., 127/255., 255/255.],
+                            [  0/255., 170/255., 255/255.],
+                            [  0/255., 212/255., 255/255.],
+                            [  0/255., 255/255., 255/255.],
+                            [  0/255., 255/255., 212/255.],
+                            [  0/255., 255/255., 170/255.],
+                            [  0/255., 127/255., 127/255.],
+                            [  0/255., 170/255.,  85/255.],
+                            [255/255., 255/255.,   0/255.],
+                            [255/255., 255/255.,   0/255.],
+                            [255/255., 212/255.,   0/255.],
+                            [255/255., 170/255.,   0/255.],
+                            [255/255., 127/255.,   0/255.],
+                            [255/255.,  85/255.,   0/255.],
+                            [255/255.,   0/255.,   0/255.],
+                            [255/255.,  42/255.,  85/255.],
+                            [255/255.,  85/255., 127/255.],
+                            [255/255., 127/255., 170/255.],
+                            [ 70/255.,  70/255.,  70/255.],
+                            [100/255., 100/255., 100/255.],
+                            [130/255., 130/255., 130/255.],
+                            [155/255., 155/255., 155/255.],
+                            [180/255., 180/255., 180/255.],
+                            [200/255., 200/255., 200/255.],
+                            [225/255., 225/255., 225/255.],
+                            [235/255., 235/255., 235/255.],
+                            [240/255., 240/255., 240/255.],
+                            [242/255., 242/255., 242/255.],
+                            [245/255., 245/255., 245/255.],
+                            [249/255., 249/255., 249/255.],
+                            [253/255., 253/255., 253/255.]])
+        # Nb of colors to take in the new palette
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
+        palette = palette[color_index]
+
+    elif cmapname == "caliop_both" # 35 colors, 2 more colors at both edges
+        palette = np.array([[  1/255.,   1/255.,   1/255.],
+                            [  0/255.,  42/255., 170/255.],
+                            [  0/255., 127/255., 255/255.],
+                            [  0/255., 170/255., 255/255.],
+                            [  0/255., 212/255., 255/255.],
+                            [  0/255., 255/255., 255/255.],
+                            [  0/255., 255/255., 212/255.],
+                            [  0/255., 255/255., 170/255.],
+                            [  0/255., 127/255., 127/255.],
+                            [  0/255., 170/255.,  85/255.],
+                            [255/255., 255/255.,   0/255.],
+                            [255/255., 255/255.,   0/255.],
+                            [255/255., 212/255.,   0/255.],
+                            [255/255., 170/255.,   0/255.],
+                            [255/255., 127/255.,   0/255.],
+                            [255/255.,  85/255.,   0/255.],
+                            [255/255.,   0/255.,   0/255.],
+                            [255/255.,  42/255.,  85/255.],
+                            [255/255.,  85/255., 127/255.],
+                            [255/255., 127/255., 170/255.],
+                            [ 70/255.,  70/255.,  70/255.],
+                            [100/255., 100/255., 100/255.],
+                            [130/255., 130/255., 130/255.],
+                            [155/255., 155/255., 155/255.],
+                            [180/255., 180/255., 180/255.],
+                            [200/255., 200/255., 200/255.],
+                            [225/255., 225/255., 225/255.],
+                            [235/255., 235/255., 235/255.],
+                            [240/255., 240/255., 240/255.],
+                            [242/255., 242/255., 242/255.],
+                            [245/255., 245/255., 245/255.],
+                            [249/255., 249/255., 249/255.],
+                            [253/255., 253/255., 253/255.]])
+        # Nb of colors to take in the new palette
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
+        palette = palette[color_index]
+        palette = np.vstack(([0,  0, 0], palette))
+        palette = np.vstack((palette, [1, 1, 1]))
+        # Nb of colors to take in the new palette
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors))\
+                                                                    .astype(int)
+        palette = palette[color_index]
+
+    elif cmapname == "caliop_browse" # 33 colors (over 1e-1 removed, added with '_both')
+        palette =  ['#062EA6',
+                    '#062EA6',
+                    '#127EFB',
+                    '#127EFB',
+                    '#127EFB',
+                    '#127EFB',
+                    '#127EFB',
+                    '#19FEAA',
+                    '#087D7D',
+                    '#0CA858',
+                    '#FFFF39',
+                    '#FFFF39',
+                    '#FFD333',
+                    '#FEAA2E',
+                    '#FE802A',
+                    '#FE5A27',
+                    '#FE2025',
+                    '#FE365A',
+                    '#FE5A80',
+                    '#FE80A9',
+                    '#484848',
+                    '#646464',
+                    '#818181',
+                    '#9A9A9A',
+                    '#B3B3B3',
+                    '#C7C7C7',
+                    '#E0E0E0',
+                    '#EAEAEA',
+                    '#F0F0F0',
+                    '#F2F2F2',
+                    '#F5F5F5',
+                    '#F9F9F9',
+                    '#FDFDFD']
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors))\.astype(int)
+        palette = [palette[i] for i in color_index]
+
+    elif cmapname == "caliop_browse_both" # 35 colors, 2 more colors (same) at both edges
+        palette =  ['#062EA6',
+                    '#062EA6',
+                    '#127EFB',
+                    '#127EFB',
+                    '#127EFB',
+                    '#127EFB',
+                    '#127EFB',
+                    '#19FEAA',
+                    '#087D7D',
+                    '#0CA858',
+                    '#FFFF39',
+                    '#FFFF39',
+                    '#FFD333',
+                    '#FEAA2E',
+                    '#FE802A',
+                    '#FE5A27',
+                    '#FE2025',
+                    '#FE365A',
+                    '#FE5A80',
+                    '#FE80A9',
+                    '#484848',
+                    '#646464',
+                    '#818181',
+                    '#9A9A9A',
+                    '#B3B3B3',
+                    '#C7C7C7',
+                    '#E0E0E0',
+                    '#EAEAEA',
+                    '#F0F0F0',
+                    '#F2F2F2',
+                    '#F5F5F5',
+                    '#F9F9F9',
+                    '#FDFDFD']
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
+        palette = [palette[i] for i in color_index]
+        palette.insert(0, palette[0])
+        palette.append('#FFFFFF')
+        # Nb of colors to take in the new palette
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
+        palette = [palette[i] for i in color_index]
+
     elif cmapname == "thermal" or cmapname == "thermal_r": # thermal from cmocean
         palette =  [[ 0.01555601, 0.13824425, 0.20181089],
                     [ 0.01620184, 0.14105074, 0.20897651],
