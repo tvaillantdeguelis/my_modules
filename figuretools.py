@@ -330,7 +330,7 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
         if cmapname[-2:] == "_r":
             palette = palette[::-1]
     
-    elif cmapname ==  "caliop" # 33 colors (over 1e-1 removed, added with '_both')
+    elif cmapname ==  "caliop": # 33 colors (over 1e-1 removed, added with '_both')
         palette = np.array([[  1/255.,   1/255.,   1/255.],
                             [  0/255.,  42/255., 170/255.],
                             [  0/255., 127/255., 255/255.],
@@ -368,7 +368,7 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
         color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
         palette = palette[color_index]
 
-    elif cmapname == "caliop_both" # 35 colors, 2 more colors at both edges
+    elif cmapname == "caliop_both": # 35 colors, 2 more colors at both edges
         palette = np.array([[  1/255.,   1/255.,   1/255.],
                             [  0/255.,  42/255., 170/255.],
                             [  0/255., 127/255., 255/255.],
@@ -408,11 +408,10 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
         palette = np.vstack(([0,  0, 0], palette))
         palette = np.vstack((palette, [1, 1, 1]))
         # Nb of colors to take in the new palette
-        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors))\
-                                                                    .astype(int)
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
         palette = palette[color_index]
 
-    elif cmapname == "caliop_browse" # 33 colors (over 1e-1 removed, added with '_both')
+    elif cmapname == "caliop_browse": # 33 colors (over 1e-1 removed, added with '_both')
         palette =  ['#062EA6',
                     '#062EA6',
                     '#127EFB',
@@ -446,10 +445,10 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
                     '#F5F5F5',
                     '#F9F9F9',
                     '#FDFDFD']
-        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors))\.astype(int)
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
         palette = [palette[i] for i in color_index]
 
-    elif cmapname == "caliop_browse_both" # 35 colors, 2 more colors (same) at both edges
+    elif cmapname == "caliop_browse_both": # 35 colors, 2 more colors (same) at both edges
         palette =  ['#062EA6',
                     '#062EA6',
                     '#127EFB',
