@@ -408,8 +408,7 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
         palette = np.vstack(([0,  0, 0], palette))
         palette = np.vstack((palette, [1, 1, 1]))
         # Nb of colors to take in the new palette
-        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors))\
-                                                                    .astype(int)
+        color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
         palette = palette[color_index]
 
     elif cmapname == "caliop_browse": # 33 colors (over 1e-1 removed, added with '_both')
