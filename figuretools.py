@@ -1620,7 +1620,7 @@ def lat_lon_dist_xaxis(ax, lat, lon, pindex, pindexbins, flag_lat_lon_label=True
                        flag_dist_label=True, one_bin_dist=0.333,
                        dist_labelsize=6, dist_tick_labelsize=6):
     # Lat/Lon x-axis
-    ax.xaxis.set_minor_locator(MultipleLocator(1000.)) # to remove minor ticks
+    ax.xaxis.set_minor_locator(MultipleLocator(1000000.)) # to remove minor ticks
     x_ticks = np.linspace(0, pindex.size - 1, 6, dtype=int)
     # plt.xticks([pindex[x] for x in x_ticks],
     #            ['%.2f\n%.2f' % (lat[x], lon[x]) for x in x_ticks])
