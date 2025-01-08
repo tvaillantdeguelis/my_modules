@@ -49,6 +49,7 @@ class CALIOPFigureMaker():
         self.axes_labelsize = 8
         self.xtick_labelsize = 8
         self.ytick_labelsize = 8
+        self.filetype = 'png'
     
     def set_and_create_fig_folder(self, figures_path, granule_date, lon_min, lon_max):
         self.fig_folder = os.path.join(figures_path, f"{granule_date}_lon_{lon_min:.2f}_{lon_max:.2f}")
@@ -111,15 +112,16 @@ class CALIOPFigureMaker():
         if flag_invert_xaxis:
             ax.invert_xaxis()
     
-    def save_fig(self, filename, filetype='png', transparent=False, adjust=(None, None, None, None)):
+    def save_fig(self, filename, filetype=None, transparent=False, adjust=(None, None, None, None)):
         # Save figure
         adj_left = adjust[0] or self.adj_left
         adj_bottom = adjust[1] or self.adj_bottom
         adj_right = adjust[2] or self.adj_right
         adj_top = adjust[3] or self.adj_top
+        filetype2 = filetype or self.filetype
         plt.subplots_adjust(left=adj_left, bottom=adj_bottom, right=adj_right, top=adj_top)
-        filename = f'{self.head_filename}_{filename}.{filetype}'
-        plt.savefig(os.path.join(self.fig_folder, filename), format=filetype, dpi=600, transparent=transparent)
+        filename = f'{self.head_filename}_{filename}.{filetype2}'
+        plt.savefig(os.path.join(self.fig_folder, filename), format=filetype2, dpi=600, transparent=transparent)
         print("\t%s saved" % filename)
 
 
