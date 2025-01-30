@@ -14,7 +14,6 @@ from cycler import cycler
 
 from my_modules.geotools import geo_distance
 
-
 # def setlatexfont():
 
 #     mpl.rc('text', usetex=True) # Let TeX do the typsetting
@@ -208,6 +207,38 @@ def setstyle(stylename):
         mpl.rcParams['axes.grid']=False
 
     return
+
+
+def interp_uniform_colormap(palette, space_interp, method_delta, space_delta, local_delta):
+    from coloraide import Color as Base
+    from coloraide.distance.delta_e_cam16 import DECAM16
+    from coloraide.spaces.cam16_ucs import CAM16UCS, CAM16SCD, CAM16LCD, CAM16JMh
+    class Color(Base): ...
+    Color.register([CAM16UCS(), CAM16SCD(), CAM16LCD(), DECAM16(), CAM16JMh()])
+    interp = Color.interpolate(palette, space=space_interp)
+    current = interp(0)
+    colors = [current]
+    last = 0
+    while last != 1:
+        low = last
+        high = 1
+        value = -1
+        while abs(low - high) > 1e-8:
+            value = (low + high) * 0.5
+            delta = current.delta_e(interp(value), method=method_delta, space=space_delta)
+            if delta < local_delta:
+                low = value
+            elif delta > local_delta:
+                high = value
+            else:
+                break
+        if value == -1:
+            break
+        last = value
+        current = interp(value)
+        colors.append(current)
+    
+    return colors
 
 
 def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
@@ -491,6 +522,23 @@ def takecmap(cmapname, nb_colors=256, clight=0.95, cdark=0.05):
         # Nb of colors to take in the new palette
         color_index = np.round(np.linspace(0, len(palette)-1, nb_colors)).astype(int)
         palette = [palette[i] for i in color_index]
+
+    elif cmapname == "extthermal" or cmapname == "extthermal_r":
+        import cmocean
+        cmap = cmocean.cm.thermal
+        N = cmap.N
+        palette_init = [mpl.colors.to_hex(cmap(i / (N - 1))) for i in range(N)]
+        palette_init.insert(0, '#000000')
+        palette_init.append('#ffffff')
+        space_interp = 'oklab'
+        method_delta = 'ok'
+        space_delta = ''
+        local_delta = 0.0048 # get 294 colors
+        palette_interp = interp_uniform_colormap(palette_init, space_interp, method_delta, space_delta, local_delta)
+        palette_interp = palette_interp[-256:] # keep 256 colors by removing the darker colors where the contrast is low
+        palette = [palette_interp[i].convert("srgb").to_string(hex=True) for i in range(len(palette_interp))]
+        if cmapname[-2:] == "_r":
+            palette = palette[::-1]
 
     elif cmapname == "thermal" or cmapname == "thermal_r": # thermal from cmocean
         palette =  [[ 0.01555601, 0.13824425, 0.20181089],
@@ -1476,12 +1524,12 @@ def lat_lon_dist_xaxis(ax, lat, lon, pindex, pindexbins, flag_lat_lon_label=True
     return
 
 if __name__ == '__main__':
-    
+
     x = np.arange(16)
     y = np.arange(16)
     a = np.arange(256).reshape(16, 16)
     ax = plt.subplot(111)
-    plt.pcolormesh(x, y, a.T, cmap=takecmap('backscatter_256'))
+    plt.pcolormesh(x, y, a.T, cmap=takecmap('extthermal'))
     cbar = plt.colorbar(orientation="horizontal")
     cbar.set_ticks([])
     cbar.set_ticklabels([])
