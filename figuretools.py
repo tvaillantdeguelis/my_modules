@@ -12,7 +12,7 @@ from matplotlib.colors import from_levels_and_colors
 from matplotlib.ticker import MultipleLocator
 from cycler import cycler
 
-from my_modules.geotools import geo_distance
+from geotools import geo_distance
 
 # def setlatexfont():
 

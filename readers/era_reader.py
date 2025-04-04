@@ -4,8 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from my_modules.readers.netcdf_reader import NetCDFReader
-from my_modules.geotools import change_map_grid_resolution
+from readers.netcdf_reader import NetCDFReader
+from geotools import change_map_grid_resolution
 
 
 class ERAReader(NetCDFReader):
