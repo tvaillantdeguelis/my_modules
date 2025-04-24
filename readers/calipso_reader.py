@@ -38,7 +38,8 @@ class CALIPSOReader():
                         # Get "fillvalue" attribute of CALIPSO variables (instead of "_FillValue")
                         fill_value = data_reader._sd_interface.select(sds_key).fillvalue
                     except AttributeError:
-                        fill_value = FILL_VALUE_FLOAT # default (hopefully it will match)
+                        # fill_value = FILL_VALUE_FLOAT # default (hopefully it will match)
+                        fill_value = None
                 self._data[sds_key] = (data_reader.get_data(sds_key), fill_value)
             # Load metadata with fillvalue
             self._metadata_keys = data_reader.get_metadata_keys()
@@ -75,7 +76,7 @@ class CALIPSOReader():
         if key in self._data.keys():
             data = self._data[key][0]
             fillvalue = self._data[key][1]
-            if do_fillvalue:
+            if do_fillvalue and fillvalue:
                 returned_data = np.ma.masked_where(data == fillvalue, data)
             else:
                 returned_data = data
