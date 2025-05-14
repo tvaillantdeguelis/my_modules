@@ -79,7 +79,7 @@ class CALIPSOReader():
             if do_fillvalue and fillvalue:
                 returned_data = np.ma.masked_where(data == fillvalue, data)
             else:
-                returned_data = data
+                returned_data = np.array(data)
             if returned_data.shape[0] == self.nb_profiles:
                 # Get slice start and end
                 if slice_start_end_type == 'profindex':
