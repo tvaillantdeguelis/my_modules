@@ -164,6 +164,10 @@ class CALIOPReader():
             else:
                 raise Exception(f"TO DO")
         if slice_start_end_type == 'profindex':
+            if not slice_start:
+                slice_start = 0
+            if not slice_end:
+                slice_end = lon.size - 1
             self.prof_min, self.prof_max = slice_start, slice_end
         elif slice_start_end_type == 'longitude':
             self.prof_min, self.prof_max = get_prof_min_max_indexes_from_lon(lon, slice_start, slice_end)
