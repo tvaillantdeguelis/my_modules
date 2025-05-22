@@ -114,6 +114,26 @@ def get_prof_min_max_indexes_from_lon(lon, lon_prof_min, lon_prof_max):
     return index_prof_min, index_prof_max
 
 
+def get_prof_min_max_indexes_from_latminmax(lat, lat_min, lat_max):
+    """
+    Return indices of start and end profiles that would remove extremities outside
+    the lat_min-lat_max range
+    """
+    
+    # Get indices where latitudes are within the range
+    lat_min = -100 if lat_min is None else lat_min
+    lat_max = 100 if lat_max is None else lat_max
+    indices = np.where((lat >= lat_min) & (lat <= lat_max))[0]
+
+    if indices.size > 0:
+        index_prof_min = indices[0]
+        index_prof_max = indices[-1]
+    else:
+        print("No values in the specified lat_min lat_max range.")
+    
+    return index_prof_min, index_prof_max
+
+
 def change_map_grid_resolution(old_grid_data, old_lat, old_lon, new_lat, new_lon):
     """
     Interpolate data to new grid resolution.

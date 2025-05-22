@@ -9,7 +9,7 @@ from readers.hdf_reader import HDF4Reader
 from paths import CALIOP_DATA_HEAD_PATH, CALIOP_DATA_TAIL_PATH_FMT, \
     IIR_DATA_HEAD_PATH, IIR_DATA_TAIL_PATH_FMT, get_caliop_data_tail_path
 from calipso_constants import *
-from geotools import get_prof_min_max_indexes_from_lon
+from geotools import get_prof_min_max_indexes_from_lon, get_prof_min_max_indexes_from_latminmax
 from standard_outputs import print_time
 from calipso_calculator import compute_par_ab532, compute_ab_mol_and_b_mol, \
     nsf_from_V_domain_to_betap_domain, rms_from_P_domain_to_betap_domain, compute_shotnoise, \
@@ -119,7 +119,7 @@ class CALIPSOReader():
 
 class CALIOPReader():
     def __init__(self, product, version, data_type, granule_date, slice_start=None, slice_end=None,
-                 slice_start_end_type='profindex', folderpath=None):
+                 slice_start_end_type='profindex', lat_min=None, lat_max=None, folderpath=None):
         """
         Get original and derived CALIOP parameters on a regular grid.
         
@@ -132,10 +132,13 @@ class CALIOPReader():
                             default: the first profile
         :param slice_end: (optional) end profile of the slice to load (included)
                           default: the end of the data
-        :param slice_start_end_type: 'profindex' if profile indexes provided or 'longitude' if
+        :param slice_start_end_type: 'profindex' if profile indexes provided, 'longitude' if
                                      longitudes provided (longitudes because increases/decreases
-                                     monotonously on one granule unlike latitudes)
+                                     monotonously on one granule unlike latitudes), or 'latminmax'
+                                     to remove extremities outside the lat range
                                      default: 'profindex'
+        :lat_min: only load observations above this latitude
+        :lat_max: only load observations below this latitude
         """
         self.product = product
         self.version = version
@@ -171,6 +174,8 @@ class CALIOPReader():
             self.prof_min, self.prof_max = slice_start, slice_end
         elif slice_start_end_type == 'longitude':
             self.prof_min, self.prof_max = get_prof_min_max_indexes_from_lon(lon, slice_start, slice_end)
+        elif slice_start_end_type == 'latminmax':
+            self.prof_min, self.prof_max = get_prof_min_max_indexes_from_latminmax(lat, lat_min, lat_max)
         else:
             raise Exception(f"Error: slice_start_end_type = '{slice_start_end_type}' is not defined. "
                      "Please use 'profindex' or 'longitude'\n")
