@@ -5,6 +5,7 @@ from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 from calipso_constants import *
+from standard_outputs import print_time, print_elapsed_time
 
 
 def compute_par_ab532(tot_ab532, per_ab532):
@@ -83,35 +84,21 @@ def make_molecular_model(mol_ND_met, O3_ND_met, Z_met, Z_data, wl, polar=None):
         mol_backscatter_cross_sect = 3.620e-33 # (m^2 / sr^-1)
         mol_ext_cross_sect  = 3.127e-32 # (m^2)
     
-    # Mask metdata (because not done automatically because no FillValue in CALIPSO HDF files)
-    mol_ND_met = np.ma.masked_where(mol_ND_met == -9999., mol_ND_met)
-    O3_ND_met = np.ma.masked_where(O3_ND_met == -9999., O3_ND_met)
-
-    # Replace fillValue (used for negative altitudes) by lowest altitude
-    # where no fillValue in order to get correct values at altitude
-    # close to 0 km after interpolation
-    # mol
-    i = mol_ND_met.size - 1
-    low_no_fillValue = mol_ND_met[i]
-    while np.ma.is_masked(low_no_fillValue) and (i > 0):
-        low_no_fillValue = mol_ND_met[i]
-        i -= 1
-    mol_ND_met = np.ma.filled(mol_ND_met, low_no_fillValue)
-    # O3
-    i = O3_ND_met.size - 1
-    low_no_fillValue = O3_ND_met[i]
-    while np.ma.is_masked(low_no_fillValue) and (i > 0):
-        low_no_fillValue = O3_ND_met[i]
-        i -= 1
-    O3_ND_met = np.ma.filled(O3_ND_met, low_no_fillValue)
+    # Handle fill values
+    mol_ND_met = replace_fillvalue_with_lowest_valid(mol_ND_met)
+    O3_ND_met = replace_fillvalue_with_lowest_valid(O3_ND_met)
     
     # Interpolate (using log) to get density values for all lidar data alt
-    Z_data = np.ma.filled(Z_data, -9999.) # pass in ndarray because masked
-                                          # arrays are not supported by interp
-    mol_ND_data = get_full_density_array(mol_ND_met, Z_met, Z_data)
+    # Z_data = np.ma.filled(Z_data, -9999.) # pass in ndarray because masked
+    #                                       # arrays are not supported by interp
+    # mol_ND_data = get_full_density_array(mol_ND_met, Z_met, Z_data)
+    interp_log_mol = interp1d(Z_met, np.log(mol_ND_met), bounds_error=False, fill_value="extrapolate")
+    mol_ND_data = np.exp(interp_log_mol(Z_data))
     if False:
+        ax = plt.subplot(111)
         plt.plot(mol_ND_met, Z_met, marker='o', c='r', label='met', zorder=-1)
         plt.scatter(mol_ND_data, Z_data, s=2, label='data')
+        # ax.set_xscale('log')
         plt.legend()
         plt.title('Molecular number density')
         plt.show()
@@ -136,8 +123,10 @@ def make_molecular_model(mol_ND_met, O3_ND_met, Z_met, Z_data, wl, polar=None):
     if wl == 532:
 
         # Interpolate to get density values for all lidar data alt
-        f = interp1d(Z_met, O3_ND_met)
-        O3_ND_data = f(Z_data)
+        # f = interp1d(Z_met, O3_ND_met)
+        # O3_ND_data = f(Z_data)
+        interp_O3 = interp1d(Z_met, O3_ND_met, bounds_error=False, fill_value="extrapolate")
+        O3_ND_data = interp_O3(Z_data)
         if False:
             plt.plot(O3_ND_met, Z_met, marker='o', c='r', label='met',
                      zorder=-1)
@@ -161,6 +150,20 @@ def make_molecular_model(mol_ND_met, O3_ND_met, Z_met, Z_data, wl, polar=None):
     return mol_ND_data, beta_mol, T2_mol, T2_O3
 
 
+def replace_fillvalue_with_lowest_valid(ND_met, fill_value=-9999.):
+    """Replace fillValue (used for negative altitudes) by lowest altitude
+    where no fillValue in order to get correct values at altitude
+    close to 0 km after interpolation"""
+    valid = ND_met != fill_value
+    if np.any(valid):
+        lowest_valid = ND_met[valid][-1] 
+        ND_met = np.where(valid, ND_met, lowest_valid)
+    else:
+        ND_met = np.zeros_like(ND_met)
+    
+    return ND_met
+
+
 def get_full_density_array(metDensity, metAltitude, Z):
 # metDensity and metAltitude are meteorological data from the CALIPSO
 # level 1 files both are 1-D arrays, with the max altitude at index 0,
@@ -181,23 +184,21 @@ def get_full_density_array(metDensity, metAltitude, Z):
 
 
 def extinction2two_way_transmittance(sigma, Z):
-# sigma is an array of extinction coefficients Z is the corresponding
-# altitude array
-#
-# the return value, T2, is an array of two-way transmittance values
-    T2 = np.zeros(sigma.size)
-# use trapezoid integration to convert extinction coefficients to
-# optical depths by OMITTING the factor of 2 in the trapezoid scheme,
-# we'll end up computing twice the optical depth at each range bin...
-# which will work out just fine when we convert the optical depths into
-# two-way transmittances
-    for j in np.arange(1, T2.size):
-        T2[j] = T2[j-1] + (sigma[j-1] + sigma[j]) * (Z[j-1] - Z[j])
-        # (sigma[j-1] + sigma[j]) / 2 *2
-    T2 = -1.0 * T2
-    T2 = np.exp(T2)
+    """Use trapezoid integration to convert extinction coefficients to
+    optical depths and derive two-way transmittances
 
-    return T2
+    Args:
+        sigma (_type_): extinction coefficients
+        Z (_type_): corresponding altitudes
+
+    Returns:
+        _type_: two-way transmittance values
+    """
+    dz = -np.diff(Z, prepend=Z[0]) # Prepend avoids mismatch in size
+    optical_depth = np.cumsum((sigma + np.roll(sigma, 1)) * dz / 2)
+    optical_depth[0] = 0  # Ensure first value is 0
+
+    return np.exp(-2*optical_depth)
 
 
 def nsf_from_V_domain_to_betap_domain(nsf, r_alt, laser_energy, calib, pgr=np.array((1,))):
