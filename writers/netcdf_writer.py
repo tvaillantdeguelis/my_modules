@@ -53,12 +53,14 @@ def write_netcdf(filename, dims, vars):
         # current_var._FillValue = dim.fillvalue
         current_var.units = dim.units
         current_var.long_name = dim.long_name
+        current_var.description = dim.description
         current_var[:] = dim.data
         
     for var in vars:
         current_var = ncfile.createVariable(var.key, var.format, var.dimensions, fill_value=var.fillvalue)
         current_var.units = var.units
         current_var.long_name = var.long_name
+        current_var.description = dim.description
         etendue = tuple([slice(var.data.shape[i]) for i in range(var.data.ndim)])
         current_var[etendue] = var.data
         
