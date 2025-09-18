@@ -50,19 +50,25 @@ def write_netcdf(filename, dims, vars):
     # Create variables
     for dim in dims:
         current_var = ncfile.createVariable(dim.key, dim.format, (dim.key,), fill_value=dim.fillvalue)
-        # current_var._FillValue = dim.fillvalue
-        current_var.units = dim.units
-        current_var.long_name = dim.long_name
-        current_var.description = dim.description
+        # Copy all attributes dynamically
+        for attr_name in dir(dim):
+            if attr_name.startswith('_') or attr_name in ('key', 'data', 'format', 'dimensions', 'fillvalue'):
+                continue
+            attr_value = getattr(dim, attr_name)
+            if attr_value is not None:
+                setattr(current_var, attr_name, attr_value)
         current_var[:] = dim.data
         
     for var in vars:
         current_var = ncfile.createVariable(var.key, var.format, var.dimensions, fill_value=var.fillvalue)
-        current_var.units = var.units
-        current_var.long_name = var.long_name
-        current_var.description = dim.description
-        etendue = tuple([slice(var.data.shape[i]) for i in range(var.data.ndim)])
-        current_var[etendue] = var.data
+        # Copy all attributes dynamically
+        for attr_name in dir(var):
+            if attr_name.startswith('_') or attr_name in ('key', 'data', 'format', 'dimensions', 'fillvalue'):
+                continue
+            attr_value = getattr(var, attr_name)
+            if attr_value is not None:
+                setattr(current_var, attr_name, attr_value)
+        current_var[...] = var.data
         
     # Close file
     ncfile.close()
