@@ -32,7 +32,7 @@ def print_elapsed_time(tic, head_string=''):
     """Print elapsed time from tic time and return current time"""
 
     elapsed_time = datetime.now() - tic
-    print(f'{head_string}(Elapsed time: {elapsed_time})')
+    print(f'{head_string}(Elapsed time: {elapsed_time})\n')
 
     return datetime.now() # tic for next
 
