@@ -23,7 +23,7 @@ class HDF4Reader:
     # __enter__ method for the "with" statement
     def __enter__(self):
         try:
-            self._sd_interface = SD(self.file_path)
+            self._sd_interface = SD(str(self.file_path))
             self._hdf_interface = HDF(self.file_path)
             self._vs_interface = self._hdf_interface.vstart()
         except HDF4Error:
