@@ -24,9 +24,6 @@ if hostname[:5] == 'icare':
     CALIOP_DATA_TAIL_PATH_FMT['L2_05kmCPro'] = "05kmCPro.{version}/{year:d}/{year:d}_{month:02d}_{day:02d}/"
     IIR_DATA_TAIL_PATH_FMT['L1'] = "CAL_IIR_L1.{version}/{year:d}/{year:d}_{month:02d}_{day:02d}/"
     IIR_DATA_TAIL_PATH_FMT['L2'] = "CAL_IIR_L2.{version}/{year:d}/{year:d}_{month:02d}_{day:02d}/"
-elif hostname == 'komputilo':
-    # Head paths
-    CALIOP_DATA_HEAD_PATH = "/home/ticjo/Documents/Pro/Recherche/codes/DATA/CALIPSO/"
 elif hostname[:4] == 'argo':
     # Head paths
     CALIOP_DATA_HEAD_PATH = "/SCF10/Data_Archive/CALIPSO/"
