@@ -129,7 +129,7 @@ def get_prof_min_max_indexes_from_latminmax(lat, lat_min, lat_max):
         index_prof_min = indices[0]
         index_prof_max = indices[-1]
     else:
-        print("No values in the specified lat_min lat_max range.")
+        sys.exit("No values in the specified lat_min lat_max range.")
     
     return index_prof_min, index_prof_max
 
