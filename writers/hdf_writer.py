@@ -6,7 +6,7 @@ import os
 import numpy as np
 from pyhdf.SD import SD, SDC
 
-NP_TO_HDF4_DTYPE = {np.dtype(np.character): SDC.CHAR,
+NP_TO_HDF4_DTYPE = {np.dtype(np.str_): SDC.CHAR,
                     np.dtype(np.int8): SDC.INT8,
                     np.dtype(np.int16): SDC.INT16,
                     np.dtype(np.int32): SDC.INT32,
@@ -16,7 +16,7 @@ NP_TO_HDF4_DTYPE = {np.dtype(np.character): SDC.CHAR,
                     np.dtype(np.float32): SDC.FLOAT32,
                     np.dtype(np.float64): SDC.FLOAT64}
 
-NP_TO_STR_DTYPE =  {np.dtype(np.character): "Char",
+NP_TO_STR_DTYPE =  {np.dtype(np.str_): "Char",
                     np.dtype(np.int8): "Int_8",
                     np.dtype(np.int16): "Int_16",
                     np.dtype(np.int32): "Int_32",
