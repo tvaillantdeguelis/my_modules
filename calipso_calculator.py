@@ -25,6 +25,9 @@ def compute_par_ab532(tot_ab532, per_ab532):
 
     return par_ab532
 
+class NoValidMolecularProfile(Exception):
+    pass
+
 
 def compute_ab_mol_and_b_mol(mol_nd, O3_nd, alt, met_alt, wl, polar=None):
     """
@@ -39,8 +42,12 @@ def compute_ab_mol_and_b_mol(mol_nd, O3_nd, alt, met_alt, wl, polar=None):
 
     # Loop on profiles
     for i in range(nb_prof):
-        _, b_mol_i, T2_mol, T2_O3 = make_molecular_model(mol_nd[i, :], O3_nd[i, :], met_alt,
-                                                         alt, wl, polar)
+        try:
+            _, b_mol_i, T2_mol, T2_O3 = make_molecular_model(mol_nd[i, :], O3_nd[i, :], met_alt,
+                                                            alt, wl, polar)
+        except NoValidMolecularProfile as e:
+            print(f"Profile {i}: {e}")
+            continue
         b_mol  [i, :] = b_mol_i
         ab_mol[i, :] = b_mol_i*T2_mol*T2_O3
 
@@ -88,6 +95,9 @@ def make_molecular_model(mol_ND_met, O3_ND_met, Z_met, Z_data, wl, polar=None):
     mol_ND_met = replace_fillvalue_with_lowest_valid(mol_ND_met)
     O3_ND_met = replace_fillvalue_with_lowest_valid(O3_ND_met)
     
+    if mol_ND_met is None or O3_ND_met is None:
+        raise NoValidMolecularProfile("All molecular or ozone values are fill_value")
+
     # Interpolate (using log) to get density values for all lidar data alt
     # Z_data = np.ma.filled(Z_data, -9999.) # pass in ndarray because masked
     #                                       # arrays are not supported by interp
@@ -158,11 +168,10 @@ def replace_fillvalue_with_lowest_valid(ND_met, fill_value=-9999.):
     if np.any(valid):
         lowest_valid = ND_met[valid][-1] 
         ND_met = np.where(valid, ND_met, lowest_valid)
+        return ND_met
     else:
-        ND_met = np.zeros_like(ND_met)
+        return None
     
-    return ND_met
-
 
 def get_full_density_array(metDensity, metAltitude, Z):
 # metDensity and metAltitude are meteorological data from the CALIPSO
