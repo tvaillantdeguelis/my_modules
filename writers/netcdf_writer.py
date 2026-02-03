@@ -25,7 +25,7 @@ class NetCDFVariable():
         self.dimensions = None
 
 
-def write_netcdf(filename, dims, vars):
+def write_netcdf(filename, dims, vars, global_attrs=None):
     """
     Create a netCDF file.
     
@@ -47,7 +47,7 @@ def write_netcdf(filename, dims, vars):
             raise Exception(f"Error: {dim.data.key} dimension ndim equal {dim.data.ndim}, should be 1.\n")
         ncfile.createDimension(dim.key, dim.data.size)
     
-    # Create variables
+    # Write dimensions
     for dim in dims:
         current_var = ncfile.createVariable(dim.key, dim.format, (dim.key,), fill_value=dim.fillvalue)
         # Copy all attributes dynamically
@@ -58,7 +58,8 @@ def write_netcdf(filename, dims, vars):
             if attr_value is not None:
                 setattr(current_var, attr_name, attr_value)
         current_var[:] = dim.data
-        
+
+    # Write variables    
     for var in vars:
         current_var = ncfile.createVariable(var.key, var.format, var.dimensions, fill_value=var.fillvalue)
         # Copy all attributes dynamically
@@ -69,7 +70,12 @@ def write_netcdf(filename, dims, vars):
             if attr_value is not None:
                 setattr(current_var, attr_name, attr_value)
         current_var[...] = var.data
-        
+
+    # Write global attributes
+        if global_attrs is not None:
+            for key, value in global_attrs.items():
+                ncfile.setncattr(key, value)
+
     # Close file
     ncfile.close()
     print(f"{filename} created.")
