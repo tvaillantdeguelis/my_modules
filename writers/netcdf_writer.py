@@ -13,16 +13,24 @@ class NetCDFVariable():
     def __init__(self, key, data):
 
         # Remove unecessary dimension (,1)
-        if data.shape[-1] == 1:
+        if isinstance(data, np.ndarray) and data.ndim > 1 and data.shape[-1] == 1:
             data = np.squeeze(data)
             
         self.key = key
         self.data = data
-        self.format = data.dtype
+        self.format = str(data.dtype)
         self.fillvalue = None
         self.units = None
+        self.standard_name = None
         self.long_name = None
+        self.axis = None
         self.dimensions = None
+        self.comment = None
+        self.coordinates = None
+        self.valid_range = None
+        self.flag_values = None
+        self.flag_meanings = None
+        self.description = None
 
 
 def write_netcdf(filename, dims, vars, global_attrs=None):
@@ -41,10 +49,15 @@ def write_netcdf(filename, dims, vars, global_attrs=None):
     # Create netCDF file
     ncfile = Dataset(filename, mode='w', format='NETCDF4')
     
+    # Write global attributes
+    if global_attrs is not None:
+        for key, value in global_attrs.items():
+            ncfile.setncattr(key, value)
+
     # Create dimensions
     for dim in dims:
         if dim.data.ndim != 1:
-            raise Exception(f"Error: {dim.data.key} dimension ndim equal {dim.data.ndim}, should be 1.\n")
+            raise Exception(f"Error: {dim.key} dimension ndim={dim.data.ndim}, should be 1.")
         ncfile.createDimension(dim.key, dim.data.size)
     
     # Write dimensions
@@ -55,7 +68,7 @@ def write_netcdf(filename, dims, vars, global_attrs=None):
             if attr_name.startswith('_') or attr_name in ('key', 'data', 'format', 'dimensions', 'fillvalue'):
                 continue
             attr_value = getattr(dim, attr_name)
-            if attr_value is not None:
+            if attr_value not in [None, "", [], ()]:
                 setattr(current_var, attr_name, attr_value)
         current_var[:] = dim.data
 
@@ -67,14 +80,9 @@ def write_netcdf(filename, dims, vars, global_attrs=None):
             if attr_name.startswith('_') or attr_name in ('key', 'data', 'format', 'dimensions', 'fillvalue'):
                 continue
             attr_value = getattr(var, attr_name)
-            if attr_value is not None:
+            if attr_value not in [None, "", [], ()]:
                 setattr(current_var, attr_name, attr_value)
         current_var[...] = var.data
-
-    # Write global attributes
-        if global_attrs is not None:
-            for key, value in global_attrs.items():
-                ncfile.setncattr(key, value)
 
     # Close file
     ncfile.close()
