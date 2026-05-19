@@ -1389,29 +1389,29 @@ def lat_lon_dist_xaxis(ax, lat, lon, pindex, pindexbins, flag_lat_lon_label=True
         lonx = '%.2f° W' % np.abs(lon[x]) if lon[x] < 0 else '%.2f° E' % lon[x]
         lat_ticks.append(latx)
         lon_ticks.append(lonx)
-    plt.xticks([pindex[x] for x in x_ticks],
+    ax.set_xticks([pindex[x] for x in x_ticks],
                ['%s\n%s' % (lat_ticks[i], lon_ticks[i]) for i in range(len(lat_ticks))])
-    plt.xlim(pindexbins[0], pindexbins[-1])
-    plt.tick_params(axis='x', which='minor', bottom=False)
+    ax.set_xlim(pindexbins[0], pindexbins[-1])
+    ax.tick_params(axis='x', which='minor', bottom=False)
     # if flag_lat_lon_label:
     #     ax.text(1.1, -0.085, 'Latitude\nLongitude', ha='left', va='top',
     #             transform=ax.transAxes)
     if not flag_lat_lon_label:
         # Don't show labels
         ax.set_xticklabels([])
-        plt.xlabel('')
+        ax.set_xlabel('')
 
     # Add distance in km on the top of the figure
     if flag_dist:
         total_dist = geo_distance(lat[0], lon[0], lat[-1], lon[-1])
         ax_dist = ax.twiny()
-        plt.xlim(0, total_dist + one_bin_dist)
-        plt.xlabel('Distance (km)', fontsize=dist_labelsize)
+        ax_dist.set_xlim(0, total_dist + one_bin_dist)
+        ax_dist.set_xlabel('Distance (km)', fontsize=dist_labelsize)
         ax_dist.xaxis.set_tick_params(labelsize=dist_tick_labelsize)
         if not flag_dist_label:
             # Don't show labels
             ax_dist.set_xticklabels([])
-            plt.xlabel('')
+            ax_dist.set_xlabel('')
 
     return
 
