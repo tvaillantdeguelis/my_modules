@@ -95,8 +95,8 @@ class CALIOPFigureMaker():
             ymin = min(self.altbins)
         if ymax is None:
             ymax = max(self.altbins)
-        plt.ylim(ymin, ymax)
-        plt.ylabel('Altitude (km)')
+        ax.set_ylim(ymin, ymax)
+        ax.set_ylabel('Altitude (km)')
 
         # x-axis
         lat_lon_dist_xaxis(ax, self.lat, self.lon, self.pindex, self.pindexbins, flag_lat_lon_label=flag_lat_lon_label, flag_dist=flag_dist, flag_dist_label=flag_dist_label, 
