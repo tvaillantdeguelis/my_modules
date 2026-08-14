@@ -30,7 +30,7 @@ elif hostname[:4] == 'argo':
     # Tail paths format
     CALIOP_DATA_TAIL_PATH_FMT['L1'] = "LID_L1.-{data_type}-{version}/{year:d}/{month:02d}/"
 else:
-    raise Exception(f"Error: Data paths for {hostname} hostname not defined.\n")
+    print(f"Warning: Data paths for {hostname} hostname not defined.\n")
 
 
 def split_granule_date(granule_date):
