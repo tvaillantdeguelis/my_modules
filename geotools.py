@@ -83,29 +83,24 @@ def lon_0_360_to_m180_180(lon_0_360):
 def get_prof_min_max_indexes_from_lon(lon, lon_prof_min, lon_prof_max):
     """
     Return indices of profiles closest to lon_prof_min and lon_prof_max
+    (None = first/last profile)
     """
     # Transform lon -180/180 to lon 0/360
     lon = lon_m180_180_to_0_360(lon)
-    lon_prof_min = lon_m180_180_to_0_360(lon_prof_min)
-    lon_prof_max = lon_m180_180_to_0_360(lon_prof_max)
 
-    # Initialization
-    diff_lon_min = 9999
-    diff_lon_max = 9999
-    index_prof_min = 0
-    index_prof_max = 0
+    def closest_index(lon_prof):
+        lon_prof = lon_m180_180_to_0_360(lon_prof)
+        diff_lon = 9999
+        index_prof = 0
+        for i in np.arange(lon.size):
+            current_diff_lon = np.abs(lon_prof - lon[i])
+            if current_diff_lon < diff_lon:
+                diff_lon = current_diff_lon
+                index_prof = i
+        return index_prof
 
-    for i in np.arange(lon.size):
-
-        current_diff_lon_min = np.abs(lon_prof_min - lon[i])
-        if current_diff_lon_min < diff_lon_min:
-            diff_lon_min = current_diff_lon_min
-            index_prof_min = i
-
-        current_diff_lon_max = np.abs(lon_prof_max - lon[i])
-        if current_diff_lon_max < diff_lon_max:
-            diff_lon_max = current_diff_lon_max
-            index_prof_max = i
+    index_prof_min = 0 if lon_prof_min is None else closest_index(lon_prof_min)
+    index_prof_max = lon.size - 1 if lon_prof_max is None else closest_index(lon_prof_max)
 
     if index_prof_max <= index_prof_min:
         raise ValueError(f"Error: index_prof_max (= {index_prof_max}) <= index_prof_min "
